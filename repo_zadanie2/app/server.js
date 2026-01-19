@@ -19,7 +19,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 app.get('/', (req, res) => {
   const dbStatus = mongoose.connection.readyState === 1 ? 'Połączono (MongoDB)' : 'Rozłączono';
   // kolory dla rozroznienia wersji
-  const bgColor = APP_VERSION === 'v1' ? '#e0f7fa' : '#e8f5e9'; // Niebieski vs Zielony
+  const bgColor = APP_VERSION === 'v1' ? '#e0f7fa' : '#e8f5e9'; // niebieski i zielony kolor
   const titleColor = APP_VERSION === 'v1' ? 'blue' : 'green';
 
   const htmlContent = `
