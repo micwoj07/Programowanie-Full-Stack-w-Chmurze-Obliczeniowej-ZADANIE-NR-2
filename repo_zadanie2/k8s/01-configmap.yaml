@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mean-config
+  namespace: zadanie2-ns
+data:
+  DB_HOST: "mongo-service"

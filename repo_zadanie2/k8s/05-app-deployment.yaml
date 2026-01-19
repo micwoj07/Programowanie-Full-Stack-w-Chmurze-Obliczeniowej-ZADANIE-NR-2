@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mean-app
+  namespace: zadanie2-ns
+spec:
+  replicas: 3 # 3 repliki dla wysokiej dostępności
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: mean-app
+  template:
+    metadata:
+      labels:
+        app: mean-app
+    spec:
+      containers:
+      - name: mean-app
+        image: mean-stack:v1 # zaczynam od wersji v1
+        imagePullPolicy: Never 
+        ports:
+        - containerPort: 3000
+        env:
+        - name: APP_VERSION
+          value: "v1" # tutaj zmiana przy aktualizacji do v2
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mean-config
+              key: DB_HOST
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mean-secret
+              key: DB_USER
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mean-secret
+              key: DB_PASS
+        # --- SONDY ---
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 10
